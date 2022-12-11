@@ -29,7 +29,7 @@ namespace FirstApi.Controllers
         [HttpPost("AddClient")]
         public IActionResult AddClient(Client client)
         {
-            throw new NotImplementedException();
+            return _clientService.AddClient(client);
         }
 
         [HttpPost("EditClient")]
@@ -38,9 +38,9 @@ namespace FirstApi.Controllers
             throw new NotImplementedException();
         }
         [HttpPost("DeleteClient")]
-        public IActionResult DeleteClient(Client client)
+        public IActionResult DeleteClient(int id)
         {
-            throw new NotImplementedException();
+            return _clientService.DeleteClient(id);
         }
     }
 }

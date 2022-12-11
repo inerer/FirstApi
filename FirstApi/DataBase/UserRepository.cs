@@ -1,4 +1,5 @@
-﻿using FirstApi.Models.Client;
+﻿using System.Reflection.Metadata;
+using FirstApi.Models.Client;
 using FirstApi.Services.ServicesInterface;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
@@ -20,7 +21,7 @@ public class UserRepository : IClientService
     {
         connection.Open();
         Client client = new Client();
-        string query = @"select * from client where id = $1";
+        string query = @"select * from client where client_id = $1";
         NpgsqlCommand cmd = new NpgsqlCommand(query, connection)
         {
             Parameters = { new NpgsqlParameter() { Value = id } }
@@ -44,10 +45,32 @@ public class UserRepository : IClientService
         connection.Close();
         return new OkObjectResult(client);
     }
-
     public IActionResult AddClient(Client client)
     {
-        throw new NotImplementedException();
+       connection.Open();
+       string query = @" insert into client(last_name, first_name, middle_name) values ($1, $2, $3)";
+       NpgsqlCommand command = new NpgsqlCommand(query, connection)
+       {
+           Parameters =
+           {
+               new NpgsqlParameter() { Value = client.LastName },
+               new NpgsqlParameter() { Value = client.FirstName },
+               new NpgsqlParameter() { Value = client.MiddleName }
+           }
+       };
+       try
+       {
+           command.ExecuteNonQuery();
+           return new AcceptedResult();
+       }
+       catch (Exception e)
+       {
+           return new BadRequestResult();
+       }
+       finally
+       {
+           connection.Close();
+       }
     }
 
     public IActionResult EditClient(Client client)
@@ -55,8 +78,28 @@ public class UserRepository : IClientService
         throw new NotImplementedException();
     }
 
-    public IActionResult DeleteClient(Client client)
+    public IActionResult DeleteClient(int id)
     {
-        throw new NotImplementedException();
+        connection.Open();
+        string query = @"delete from client where client_id=($1)";
+        NpgsqlCommand command = new NpgsqlCommand(query, connection)
+        {
+            Parameters =
+            {
+                new NpgsqlParameter() { Value = id }
+            }
+        };
+        try
+        {
+            return command.ExecuteNonQuery() > 0 ? new AcceptedResult() : new BadRequestResult();
+        }
+        catch (Exception e)
+        {
+            return new BadRequestResult();
+        }
+        finally
+        {
+            connection.Close();
+        }
     }
 }

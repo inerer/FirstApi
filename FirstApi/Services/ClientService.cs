@@ -23,7 +23,7 @@ public class ClientService : IClientService
 
     public IActionResult AddClient(Client client)
     {
-        throw new NotImplementedException();
+        return _userRepository.AddClient(client);
     }
 
     public IActionResult EditClient(Client client)
@@ -31,8 +31,8 @@ public class ClientService : IClientService
         throw new NotImplementedException();
     }
 
-    public IActionResult DeleteClient(Client client)
+    public IActionResult DeleteClient(int id)
     {
-        throw new NotImplementedException();
+        return _userRepository.DeleteClient(id);
     }
 }
