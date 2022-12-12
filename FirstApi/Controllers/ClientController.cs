@@ -14,7 +14,7 @@ namespace FirstApi.Controllers
     [ApiController]
     public class ClientController : ControllerBase, IClientService
     {
-        private ClientService _clientService;
+        private readonly ClientService _clientService;
         
         public ClientController(IConfiguration configuration)
         {
@@ -35,7 +35,7 @@ namespace FirstApi.Controllers
         [HttpPost("EditClient")]
         public IActionResult EditClient(Client client)
         {
-            throw new NotImplementedException();
+            return _clientService.EditClient(client);
         }
         [HttpPost("DeleteClient")]
         public IActionResult DeleteClient(int id)

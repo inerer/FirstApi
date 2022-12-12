@@ -75,7 +75,32 @@ public class UserRepository : IClientService
 
     public IActionResult EditClient(Client client)
     {
-        throw new NotImplementedException();
+        connection.Open();
+        string query = @"update client set last_name=($1), first_name=($2), middle_name=($3) where client_id=($4)";
+        NpgsqlCommand command = new(query, connection)
+        {
+            Parameters =
+            {
+                new NpgsqlParameter() { Value = client.LastName },
+                new NpgsqlParameter() { Value = client.FirstName },
+                new NpgsqlParameter() { Value = client.MiddleName },
+                new NpgsqlParameter() { Value = client.ClientId }
+            }
+        };
+        try
+        {
+            // выполняем команду
+            return command.ExecuteNonQuery() > 0 ? new AcceptedResult() : new BadRequestResult();
+        }
+        // что-то не так с данными (ну вдруг)
+        catch (Exception e)
+        {
+            return new BadRequestResult();
+        }
+        finally
+        {
+            connection.Close();
+        }
     }
 
     public IActionResult DeleteClient(int id)

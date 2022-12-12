@@ -28,7 +28,7 @@ public class ClientService : IClientService
 
     public IActionResult EditClient(Client client)
     {
-        throw new NotImplementedException();
+        return _userRepository.EditClient(client);
     }
 
     public IActionResult DeleteClient(int id)
